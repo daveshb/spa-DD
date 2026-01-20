@@ -1,11 +1,10 @@
-import "./style.css";
+import { routes } from "./constants/routes";
 
-
-const routes = {
-  "/home": "./views/home.html",
-  "/login": "./views/login.html",
-  "/about": "./views/about.html",
-};
+import "./styles/home.css"
+import "./styles/login.css"
+import "./styles/about.css"
+import "./styles/globals.css"
+import "./styles/contact.csaas"
 
 document.body.addEventListener("click", (e) => {
   if (e.target.matches("[data-link]")) {
