@@ -1,3 +1,4 @@
+import { getUserById, getUsers } from "./services/user";
 import "./styles/globals.css";
 
 export const routes = {
@@ -65,7 +66,15 @@ async function navigate(pathname) {
   }
 }
 
-function initLogin() {
+async function initLogin() {
+
+  const result = await getUsers()
+  const user3 = await getUserById(3)
+
+  
+  console.log(result)
+  console.log(user3)
+
   let userInput = document.getElementById("userInput");
   let passInput = document.getElementById("passInput");
   let buttonInput = document.getElementById("buttonLogin");
