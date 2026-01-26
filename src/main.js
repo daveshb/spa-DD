@@ -7,6 +7,34 @@ export const routes = {
   "/contact": "./views/contact.html",
 };
 
+// Rutas públicas (sin login)
+const publicRoutes = ["/login"];
+
+
+// Función para verificar si está autenticado
+function isAuthenticated() {
+  const userData = localStorage.getItem("userData");
+  return userData && JSON.parse(userData).isActive;
+}
+
+
+// Función para proteger rutas
+function checkRouteAccess(pathname) {
+  const isLoggedIn = isAuthenticated();
+
+  // Si intenta acceder a login y ya está logueado, redirige a home
+  if (pathname === "/login" && isLoggedIn) {
+    return "/home";
+  }
+
+  // Si intenta acceder a rutas protegidas sin loguear, redirige a login
+  if (!publicRoutes.includes(pathname) && !isLoggedIn) {
+    return "/login";
+  }
+
+  return pathname;
+}
+
 document.body.addEventListener("click", (e) => {
   if (e.target.matches("[data-link]")) {
     e.preventDefault();
@@ -16,7 +44,10 @@ document.body.addEventListener("click", (e) => {
 });
 
 async function navigate(pathname) {
-  const routeEnd = routes[pathname];
+  // Verificar acceso a la ruta
+  const allowedRoute = checkRouteAccess(pathname);
+
+  const routeEnd = routes[allowedRoute];
   const resp = await fetch(routeEnd);
   const html = await resp.text();
   document.getElementById("app").innerHTML = html;
@@ -29,8 +60,8 @@ async function navigate(pathname) {
     "/contact": initContact,
   };
 
-  if (viewHandlers[pathname]) {
-    viewHandlers[pathname]();
+  if (viewHandlers[allowedRoute]) {
+    viewHandlers[allowedRoute]();
   }
 }
 
@@ -61,14 +92,14 @@ function initLogin() {
         role: "admin"
       };
 
-      console.log(userObjet);
-      console.log(JSON.stringify(userObjet));
-      console.log(typeof JSON.stringify(userObjet));
-
       localStorage.setItem("userData", JSON.stringify(userObjet));
       sessionStorage.setItem("pass", pass);
+
+      // Redirigir a home después de login
+      navigate("/home");
     } else {
       console.log("no tiene acceso");
+      alert("Usuario o contraseña incorrecta");
     }
   });
 }
@@ -80,8 +111,6 @@ function initHome() {
 
   let stringUser = localStorage.getItem("userData") || "";
   let objetUser = JSON.parse(stringUser);
-  console.log(objetUser);
-  console.log(typeof objetUser);
 
   let passUser = sessionStorage.getItem("pass") || "";
 
@@ -89,7 +118,11 @@ function initHome() {
   pass.textContent = passUser;
 
   buttonLogout.addEventListener("click", () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("userData");
+    sessionStorage.removeItem("pass");
+
+    // Redirigir a login después de logout
+    navigate("/login");
   });
 }
 
@@ -102,3 +135,9 @@ function initContact() {
   // Lógica específica para la vista contact
   console.log("Vista Contact cargada");
 }
+
+// Inicializar la app al cargar
+document.addEventListener("DOMContentLoaded", () => {
+  const initialRoute = isAuthenticated() ? "/home" : "/login";
+  navigate(initialRoute);
+});
