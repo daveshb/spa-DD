@@ -13,6 +13,39 @@
       "email": "carlos@example.com",
       "edad": 18,
       "ciudad": "Medellin"
+    },
+    {
+      "id": "acf2",
+      "name": "Esteban",
+      "email": "esteban@corre.com",
+      "age": "20",
+      "city": "bello"
+    },
+    {
+      "id": "dfc0",
+      "name": "otroUsuario",
+      "email": "otro@corre.com",
+      "age": "30",
+      "city": "la estrella"
+    },
+    {
+      "id": "e808",
+      "name": "user3000",
+      "email": "correo@correo.com",
+      "age": "18",
+      "city": "london"
+    },
+    {
+      "id": "9b6e",
+      "name": "sdfsd",
+      "email": "daves.hb@hotmail.com"
+    },
+    {
+      "id": "9875",
+      "name": "sdfsd",
+      "email": "daves.hb@hotmail.com",
+      "age": "34",
+      "city": "dsfsdfsdfd"
     }
   ],
   "productos": [
@@ -34,7 +67,7 @@
       "id": "1b35",
       "titulo": "Aprender JS",
       "descripcion": "",
-      "completado": true,
+      "completado": false,
       "fechaCreacion": "2026-01-26"
     },
     {
