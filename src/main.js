@@ -7,6 +7,7 @@ import {
   markTodoAsComplete,
 } from "./services/todos.js";
 import "./styles/globals.css";
+import { loginUser } from "./services/login.js";
 
 export const routes = {
   "/home": "./views/home.html",
@@ -19,13 +20,11 @@ export const routes = {
 // Rutas públicas (sin login)
 const publicRoutes = ["/login"];
 
-
 // Función para verificar si está autenticado
 function isAuthenticated() {
   const userData = localStorage.getItem("userData");
   return userData && JSON.parse(userData).isActive;
 }
-
 
 // Función para proteger rutas
 function checkRouteAccess(pathname) {
@@ -67,7 +66,7 @@ async function navigate(pathname) {
     "/home": initHome,
     "/about": initAbout,
     "/contact": initContact,
-    "/todolist": initTodoList
+    "/todolist": initTodoList,
   };
 
   if (viewHandlers[allowedRoute]) {
@@ -76,14 +75,6 @@ async function navigate(pathname) {
 }
 
 async function initLogin() {
-
-  const result = await getUsers()
-  const user3 = await getUserById(1)
-
-
-  
-  console.log(result)
-  console.log(user3)
 
   let userInput = document.getElementById("userInput");
   let passInput = document.getElementById("passInput");
@@ -100,19 +91,26 @@ async function initLogin() {
     pass = e.target.value;
   });
 
-  buttonInput.addEventListener("click", () => {
-    if (user === "david" && pass === "123456") {
+  buttonInput.addEventListener("click", async () => {
+    const userResp = await loginUser(user);
+
+
+    if(!userResp){
+      console.log("user not found")
+      return
+    }
+
+    if (userResp.password == pass ) {
       console.log("incio sesion");
 
       const userObjet = {
         userName: user,
         userPass: pass,
         isActive: true,
-        role: "admin"
+        role: userResp.role,
       };
 
       localStorage.setItem("userData", JSON.stringify(userObjet));
-      sessionStorage.setItem("pass", pass);
 
       // Redirigir a home después de login
       navigate("/home");
@@ -151,7 +149,6 @@ function initAbout() {
 }
 
 function initContact() {
-
   const inputname = document.getElementById("inputName");
   const inputemail = document.getElementById("inputEmail");
   const inputage = document.getElementById("inputAge");
@@ -163,53 +160,41 @@ function initContact() {
   let age;
   let city;
 
-  inputname.addEventListener("input",(e)=>{
-    name = e.target.value
-  })
-  inputemail.addEventListener("input",(e)=>{
-    email = e.target.value
-  })
-  inputage.addEventListener("input",(e)=>{
-    age = e.target.value
-  })
-  inputcity.addEventListener("input",(e)=>{
-    city = e.target.value
-  })
+  inputname.addEventListener("input", (e) => {
+    name = e.target.value;
+  });
+  inputemail.addEventListener("input", (e) => {
+    email = e.target.value;
+  });
+  inputage.addEventListener("input", (e) => {
+    age = e.target.value;
+  });
+  inputcity.addEventListener("input", (e) => {
+    city = e.target.value;
+  });
 
-  btnCreateUser.addEventListener("click",async()=>{
-
+  btnCreateUser.addEventListener("click", async () => {
     const user = {
-      name:  name,
+      name: name,
       email: email,
       age: age,
-      city: city
-    }
-    
-    const response = await createUser(user);
-    console.log(response)
+      city: city,
+    };
 
-    if (response){
-       console.log( "Se aguardo el usuario")
-      }
-    
+    const response = await createUser(user);
+    console.log(response);
+
+    if (response) {
+      console.log("Se aguardo el usuario");
+    }
+
     // createUser(user).then((resp)=>{
     //   console.log(resp)
     //   if (resp){
     //    console.log( "Se aguardo el usuario")
     //   }
     // })
-
-
-
-  })
-
-
-
-
-
-
-
-
+  });
 
   // Lógica específica para la vista contact
   console.log("Vista Contact cargada");
@@ -222,6 +207,14 @@ async function initTodoList() {
   const addBtn = document.getElementById("addBtn");
   const todoList = document.getElementById("todoList");
   const emptyState = document.getElementById("emptyState");
+
+
+  const userString = localStorage.getItem("userData");
+  const userObject = JSON.parse(userString)
+  const isAdmin = userObject.role === "admin" ? true : false
+
+  console.log(isAdmin)
+
 
   // Cargar todos al iniciar
   async function cargarTodos() {
@@ -288,7 +281,7 @@ async function initTodoList() {
         </div>
         <div class="todo-actions">
           <button class="btn btn-edit" data-id="${todo.id}">Editar</button>
-          <button class="btn btn-delete" data-id="${todo.id}">Eliminar</button>
+          ${isAdmin ? '<button class="btn btn-delete" data-id="${todo.id}">Eliminar</button>' : "" }
         </div>
       `;
 
@@ -299,8 +292,10 @@ async function initTodoList() {
       const editBtn = li.querySelector(".btn-edit");
       editBtn.addEventListener("click", () => editarTodo(todo.id));
 
-      const deleteBtn = li.querySelector(".btn-delete");
-      deleteBtn.addEventListener("click", () => eliminarTodo(todo.id));
+      if(isAdmin){
+        const deleteBtn = li.querySelector(".btn-delete");
+        deleteBtn.addEventListener("click", () => eliminarTodo(todo.id));
+      }
 
       todoList.appendChild(li);
     });

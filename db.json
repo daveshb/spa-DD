@@ -1,51 +1,47 @@
 {
   "usuarios": [
     {
-      "id": "1",
-      "nombre": "Juan Pérez",
-      "email": "juan@example.com",
-      "edad": 28,
-      "ciudad": "Madrid"
-    },
-    {
-      "id": "3",
-      "nombre": "Carlos Grisales",
-      "email": "carlos@example.com",
-      "edad": 18,
-      "ciudad": "Medellin"
-    },
-    {
       "id": "acf2",
       "name": "Esteban",
-      "email": "esteban@corre.com",
+      "email": "esteban@correo.com",
       "age": "20",
-      "city": "bello"
+      "city": "bello",
+      "password": "0000",
+      "role": "user"
     },
     {
       "id": "dfc0",
       "name": "otroUsuario",
       "email": "otro@corre.com",
       "age": "30",
-      "city": "la estrella"
+      "city": "la estrella",
+      "password": "12345678",
+      "role": "user"
     },
     {
       "id": "e808",
       "name": "user3000",
       "email": "correo@correo.com",
       "age": "18",
-      "city": "london"
+      "city": "london",
+      "password": "12345678",
+      "role": "user"
     },
     {
       "id": "9b6e",
       "name": "sdfsd",
-      "email": "daves.hb@hotmail.com"
+      "email": "daves.hb@hotmail.com",
+      "password": "12345678",
+      "role": "admin"
     },
     {
       "id": "9875",
       "name": "sdfsd",
-      "email": "daves.hb@hotmail.com",
+      "email": "daveshb@hotmail.com",
       "age": "34",
-      "city": "dsfsdfsdfd"
+      "city": "dsfsdfsdfd",
+      "password": "12345678",
+      "role": "user"
     }
   ],
   "productos": [
@@ -65,7 +61,7 @@
   "todos": [
     {
       "id": "1b35",
-      "titulo": "Aprender JS",
+      "titulo": "asdasdasdas",
       "descripcion": "",
       "completado": false,
       "fechaCreacion": "2026-01-26"
@@ -80,13 +76,6 @@
     {
       "id": "39da",
       "titulo": "aprender ReactJS",
-      "descripcion": "",
-      "completado": false,
-      "fechaCreacion": "2026-01-26"
-    },
-    {
-      "id": "1b91",
-      "titulo": "algo",
       "descripcion": "",
       "completado": false,
       "fechaCreacion": "2026-01-26"
