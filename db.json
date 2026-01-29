@@ -60,13 +60,6 @@
   ],
   "todos": [
     {
-      "id": "1b35",
-      "titulo": "asdasdasdas",
-      "descripcion": "",
-      "completado": false,
-      "fechaCreacion": "2026-01-26"
-    },
-    {
       "id": "fa5b",
       "titulo": "Aprender JSON SERVER",
       "descripcion": "",
